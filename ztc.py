@@ -177,7 +177,7 @@ else:
             vulners_proxy = {}
             try:
                 if c.vuln_proxy:
-                    valners_proxy = {"https": c.vuln_proxy}
+                    vulners_proxy = {"https": c.vuln_proxy}
             except:
                 pass
             vuln_response = requests.post(vulners_url, data=os_data,
