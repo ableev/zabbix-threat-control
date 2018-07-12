@@ -118,8 +118,32 @@ else:
         # если дампа матрицы на диске нет - формируем (исходные данные из zabbix и затем обогащаем их через vulners)
     total_hosts = 0
     try:
+        # получаем айдишку главного темплейта
         tmpl_id = zapi.template.get(filter={'host': c.tmpl_host})[0]['templateid']
-        h_matrix = zapi.host.get(templated_hosts=False, templateids=tmpl_id, monitored_hosts=True, output=['hostid'])
+        # подготавливаем список айдишек всех вложенных темплейтов (пустой)
+        tmpl_ids_all = list()
+        # добавляем в него сразу главный темплейт
+        tmpl_ids_all.append(tmpl_id)
+        # определяем флаг, который покажет, что нашли ВСЕ вложенные темплейты
+        sub_templates_are_not_complete = True
+        while sub_templates_are_not_complete:
+            # временный список, который будем получать рекурсивно из всего списка айдишек
+            tmpl_ids_all_tmp = list(tmpl_ids_all)
+            # делаем запрос
+            sub_templates = zapi.template.get(templated_hosts=True, parentTemplateids=tmpl_ids_all, monitored_hosts=True, output=['hostid'])
+            # выдираем чиселки
+            sub_templates_ids = [x["templateid"] for x in sub_templates]
+            # лепим их ко временному списку
+            tmpl_ids_all_tmp += sub_templates_ids
+            # уник
+            tmpl_ids_all_tmp = uniq_list(tmpl_ids_all_tmp)
+            # проверяем, если у нас общий список совпал с текущим полученным - значит дело сделано
+            if tmpl_ids_all_tmp == uniq_list(tmpl_ids_all):
+                sub_templates_are_not_complete = False
+            else:
+                # ну а если нет - значит приравниваем текущий временный к постоянному списку всех айдишек темплейтов
+                tmpl_ids_all = list(tmpl_ids_all_tmp)
+        h_matrix = zapi.host.get(templated_hosts=False, templateids=tmpl_ids_all, monitored_hosts=True, output=['hostid'])
         # h_matrix = zapi.host.get(templated_hosts=False, templateids=tmpl_id, limit=5, monitored_hosts=True, output=['hostid'])
         full_hosts = len(h_matrix)
         logging.info('Received from Zabbix {} hosts for processing'.format(full_hosts))
