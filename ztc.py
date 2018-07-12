@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# coding: utf-8
 
 """Zabbix vulnerability assessment plugin."""
 
@@ -53,7 +54,7 @@ logging.basicConfig(
     format='%(asctime)s  %(process)d  %(levelname)s  %(message)s  [%(filename)s:%(lineno)d]')
 
 
-# выполение комадн в шелле
+# выполение команд в шелле
 def shell(command):
     proc = subprocess.Popen(command, stderr=subprocess.STDOUT, stdout=subprocess.PIPE, shell=True)
     out = proc.communicate()[0].decode('utf8')
@@ -168,7 +169,7 @@ else:
     user_agent = 'vulners-ztc-{}'.format(__version__)
     for h in h_matrix:
         current_host += 1
-        # todo: логирование обработки каждой стрки в матрице?
+        # todo: логирование обработки каждой строки в матрице?
         try:
             os_data = '{"package":' + json.dumps(h['OS - Packages'].splitlines()) + ',"os":"' + h['OS - Name'] + \
                       '","version":"' + h['OS - Version'] + '","apiKey":"' + c.vuln_api_key + '"}'
