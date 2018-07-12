@@ -174,8 +174,15 @@ else:
             os_data = '{"package":' + json.dumps(h['OS - Packages'].splitlines()) + ',"os":"' + h['OS - Name'] + \
                       '","version":"' + h['OS - Version'] + '","apiKey":"' + c.vuln_api_key + '"}'
             # идем в вулнерс и получем там уязвимости для списка пакетов и ОС
+            vulners_proxy = {}
+            try:
+                if c.vuln_proxy:
+                    valners_proxy = {"https": c.vuln_proxy}
+            except:
+                pass
             vuln_response = requests.post(vulners_url, data=os_data,
                                           headers={'User-Agent': user_agent, 'Content-Type': 'application/json'},
+                                          proxies=vulners_proxy,
                                           timeout=10)
             h.update({'vuln_data': vuln_response.json()})
             # чтобы вулнерс не упал под нагрузкой, засыпаем на чуть-чуть (между запросами)

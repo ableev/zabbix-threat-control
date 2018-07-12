@@ -1,4 +1,5 @@
 vuln_api_key = 'RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR'
+vuln_proxy = None
 
 zbx_user = 'yourlogin'
 zbx_pass = 'yourpassword'
