@@ -71,26 +71,26 @@ def uniq_list(l):
 
 
 # проверяем валидность информации об ОС
-def os_data_valid(os, version, packages, host_name):
+def os_data_valid(os_name, version, packages, host_name):
     try:
-        if len(os) > 0 and float(version) != 0 and len(packages) > 5:
+        if len(os_name) > 0 and float(version) != 0 and len(packages) > 5:
             return True
     except Exception as e:
         logging.warning('Excluded {}. Exception: {}'.format(host_name, e))
         return False
-    logging.info('Excluded {}. ОS: {}, Version: {}, Packages: {}'.format(host_name, os, version, len(packages)))
+    logging.info('Excluded {}. ОS: {}, Version: {}, Packages: {}'.format(host_name, os_name, version, len(packages)))
     return False
 
 
 def dump_create(filename, obj):
-    with open(filename, 'wb') as file:
-        pickle.dump(obj, file)
+    with open(filename, 'wb') as f:
+        pickle.dump(obj, f)
     return True
 
 
 def dump_load(filename):
-    with open(filename, 'rb') as file:
-        obj = pickle.load(file)
+    with open(filename, 'rb') as f:
+        obj = pickle.load(f)
     return obj
 
 
