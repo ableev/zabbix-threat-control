@@ -83,14 +83,14 @@ def os_data_valid(os_name, version, packages, host_name):
 
 
 def dump_create(filename, obj):
-    with open(filename, 'wb') as f:
-        pickle.dump(obj, f)
+    with open(filename, 'wb') as fname:
+        pickle.dump(obj, fname)
     return True
 
 
 def dump_load(filename):
-    with open(filename, 'rb') as f:
-        obj = pickle.load(f)
+    with open(filename, 'rb') as fname:
+        obj = pickle.load(fname)
     return obj
 
 
